@@ -1,5 +1,7 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:logger/logger.dart';
 import 'package:my_port_folio/component.dart';
 
 class HomeWeb extends StatefulWidget {
@@ -12,6 +14,9 @@ class HomeWeb extends StatefulWidget {
 class _HomeWebState extends State<HomeWeb> {
   @override
   Widget build(BuildContext context) {
+    var _dio = Dio();
+    var _logger = Logger();
+
     return Scaffold(
       backgroundColor: Colors.grey,
       drawer: Drawer(),
@@ -59,6 +64,22 @@ class _HomeWebState extends State<HomeWeb> {
                   Text(
                     "Jagonya Ayam !!",
                     style: GoogleFonts.vastShadow(fontSize: 40),
+                  ),
+                  MaterialButton(
+                    onPressed: () async {
+                      try {
+                        Response response = await _dio.get(
+                          "https://jsonplaceholder.typicode.com/posts",
+                        );
+                        _logger.d(
+                          response.data,
+                        ); // log the actual response body
+                      } catch (e) {
+                        print('Error fetching posts: $e');
+                        throw Exception('Failed to load posts');
+                      }
+                    },
+                    child: Text("Fetch Posts"),
                   ),
                 ],
               ),
